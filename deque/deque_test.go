@@ -1,6 +1,7 @@
 package deque
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -29,4 +30,34 @@ func TestDeque(t *testing.T) {
 	if !dq.IsEmpty() {
 		t.Errorf("expected empty deque after clear")
 	}
+}
+
+type El struct {
+	ID  int
+	Val int
+}
+
+func (el *El) String() string {
+	return fmt.Sprintf("(%v,%v)", el.ID, el.Val)
+}
+
+func TestPriorityQueue_String(t *testing.T) {
+	pq := New[*El]()
+	pq.PushFront(&El{
+		ID:  4,
+		Val: 0,
+	})
+	pq.PushFront(&El{
+		ID:  0,
+		Val: 2,
+	})
+	pq.Push(&El{
+		ID:  3,
+		Val: 0,
+	})
+	pq.PushBack(&El{
+		ID:  2,
+		Val: 0,
+	})
+	fmt.Println(pq)
 }

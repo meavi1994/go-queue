@@ -1,5 +1,10 @@
 package deque
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Deque is a generic, non-thread-safe double-ended queue.
 type Deque[T any] struct {
 	items []T
@@ -86,4 +91,18 @@ func (d *Deque[T]) IsEmpty() bool {
 // Clear removes all elements.
 func (d *Deque[T]) Clear() {
 	d.items = make([]T, 0)
+}
+
+// String implements fmt.Stringer
+func (d *Deque[T]) String() string {
+	var sb strings.Builder
+	sb.WriteString("Deque [")
+	for i, v := range d.items {
+		if i > 0 {
+			sb.WriteString(", ")
+		}
+		sb.WriteString(fmt.Sprintf("%v", v))
+	}
+	sb.WriteString("]")
+	return sb.String()
 }

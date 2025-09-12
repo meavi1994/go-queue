@@ -1,6 +1,10 @@
 package priorityqueue
 
-import "container/heap"
+import (
+	"container/heap"
+	"fmt"
+	"strings"
+)
 
 // PriorityQueue is a generic, non-thread-safe priority queue.
 type PriorityQueue[T any] struct {
@@ -65,4 +69,23 @@ func (pq *PriorityQueue[T]) Peek() (T, bool) {
 		return zero, false
 	}
 	return pq.items[0].value, true
+}
+
+// Peek returns the top-priority value without removing it.
+func (pq *PriorityQueue[T]) PeekValue() (T, bool) {
+	return pq.Peek()
+}
+
+// String implements fmt.Stringer
+func (pq *PriorityQueue[T]) String() string {
+	var sb strings.Builder
+	sb.WriteString("PriorityQueue [")
+	for i, it := range pq.items {
+		if i > 0 {
+			sb.WriteString(", ")
+		}
+		sb.WriteString(fmt.Sprintf("%v", it.value))
+	}
+	sb.WriteString("]")
+	return sb.String()
 }

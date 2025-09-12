@@ -1,6 +1,7 @@
 package priorityqueue
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -26,4 +27,35 @@ func TestPriorityQueue(t *testing.T) {
 	if pq.Len() != 0 {
 		t.Errorf("expected length 0, got %v", pq.Len())
 	}
+
+}
+
+type El struct {
+	ID  int
+	Val int
+}
+
+func (el *El) String() string {
+	return fmt.Sprintf("(%v,%v)", el.ID, el.Val)
+}
+
+func TestPriorityQueue_String(t *testing.T) {
+	pq := New[*El](func(a, b *El) bool { return a.ID > b.ID })
+	pq.PushValue(&El{
+		ID:  4,
+		Val: 0,
+	})
+	pq.PushValue(&El{
+		ID:  0,
+		Val: 2,
+	})
+	pq.PushValue(&El{
+		ID:  3,
+		Val: 0,
+	})
+	pq.PushValue(&El{
+		ID:  2,
+		Val: 0,
+	})
+	fmt.Println(pq)
 }
