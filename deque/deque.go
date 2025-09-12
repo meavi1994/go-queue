@@ -96,7 +96,7 @@ func (d *Deque[T]) Clear() {
 // String implements fmt.Stringer
 func (d *Deque[T]) String() string {
 	var sb strings.Builder
-	sb.WriteString("Deque [")
+	sb.WriteString("[")
 	for i, v := range d.items {
 		if i > 0 {
 			sb.WriteString(", ")
