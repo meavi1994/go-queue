@@ -92,6 +92,11 @@ func (d *Deque[T]) IsEmpty() bool {
 func (d *Deque[T]) Clear() {
 	d.items = make([]T, 0)
 }
+func (d *Deque[T]) ToArray() []T {
+	clone := make([]T, d.Len())
+	copy(clone, d.items)
+	return clone
+}
 
 // String implements fmt.Stringer
 func (d *Deque[T]) String() string {
