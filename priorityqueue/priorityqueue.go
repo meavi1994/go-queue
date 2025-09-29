@@ -8,18 +8,18 @@ import (
 
 // PriorityQueue is a generic, non-thread-safe priority queue.
 type PriorityQueue[T any] struct {
-	items []*item[T]
+	items []*Item[T]
 	less  func(a, b T) bool
 }
 
-type item[T any] struct {
-	value T
+type Item[T any] struct {
+	Value T
 	index int // internal index
 }
 
 // New creates a new priority queue with a custom less function.
 func New[T any](less func(a, b T) bool) *PriorityQueue[T] {
-	pq := &PriorityQueue[T]{less: less, items: []*item[T]{}}
+	pq := &PriorityQueue[T]{less: less, items: []*Item[T]{}}
 	heap.Init(pq)
 	return pq
 }
@@ -27,7 +27,7 @@ func New[T any](less func(a, b T) bool) *PriorityQueue[T] {
 // Len returns the number of items.
 func (pq PriorityQueue[T]) Len() int { return len(pq.items) }
 func (pq PriorityQueue[T]) Less(i, j int) bool {
-	return pq.less(pq.items[i].value, pq.items[j].value)
+	return pq.less(pq.items[i].Value, pq.items[j].Value)
 }
 func (pq PriorityQueue[T]) Swap(i, j int) {
 	pq.items[i], pq.items[j] = pq.items[j], pq.items[i]
@@ -35,7 +35,7 @@ func (pq PriorityQueue[T]) Swap(i, j int) {
 	pq.items[j].index = j
 }
 func (pq *PriorityQueue[T]) Push(x any) {
-	it := x.(*item[T])
+	it := x.(*Item[T])
 	it.index = len(pq.items)
 	pq.items = append(pq.items, it)
 }
@@ -47,31 +47,46 @@ func (pq *PriorityQueue[T]) Pop() any {
 	return it
 }
 
-// Push adds a value to the queue.
+// Push adds a Value to the queue.
 func (pq *PriorityQueue[T]) PushValue(value T) {
-	heap.Push(pq, &item[T]{value: value})
+	pq.PushAndReturnItem(value)
 }
 
-// Pop removes and returns the top-priority value.
+func (pq *PriorityQueue[T]) PushAndReturnItem(value T) *Item[T] {
+	it := &Item[T]{Value: value}
+	heap.Push(pq, it)
+	return it
+}
+
+func (pq *PriorityQueue[T]) RemoveItem(it *Item[T]) (T, bool) {
+	if it.index < 0 || it.index >= pq.Len() {
+		var zero T
+		return zero, false
+	}
+	removed := heap.Remove(pq, it.index).(*Item[T])
+	return removed.Value, true
+}
+
+// Pop removes and returns the top-priority Value.
 func (pq *PriorityQueue[T]) PopValue() (T, bool) {
 	if pq.Len() == 0 {
 		var zero T
 		return zero, false
 	}
-	it := heap.Pop(pq).(*item[T])
-	return it.value, true
+	it := heap.Pop(pq).(*Item[T])
+	return it.Value, true
 }
 
-// Peek returns the top-priority value without removing it.
+// Peek returns the top-priority Value without removing it.
 func (pq *PriorityQueue[T]) Peek() (T, bool) {
 	if pq.Len() == 0 {
 		var zero T
 		return zero, false
 	}
-	return pq.items[0].value, true
+	return pq.items[0].Value, true
 }
 
-// Peek returns the top-priority value without removing it.
+// Peek returns the top-priority Value without removing it.
 func (pq *PriorityQueue[T]) PeekValue() (T, bool) {
 	return pq.Peek()
 }
@@ -84,7 +99,7 @@ func (pq *PriorityQueue[T]) String() string {
 		if i > 0 {
 			sb.WriteString(", ")
 		}
-		sb.WriteString(fmt.Sprintf("%v", it.value))
+		sb.WriteString(fmt.Sprintf("%v", it.Value))
 	}
 	sb.WriteString("]")
 	return sb.String()

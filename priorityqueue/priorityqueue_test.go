@@ -11,7 +11,8 @@ func TestPriorityQueue(t *testing.T) {
 	pq.PushValue(10)
 	pq.PushValue(5)
 	pq.PushValue(20)
-
+	value := pq.PushAndReturnItem(30)
+	pq.RemoveItem(value)
 	if val, _ := pq.Peek(); val != 20 {
 		t.Errorf("expected 20, got %v", val)
 	}
